@@ -33,6 +33,32 @@ RagTUI(my_pipeline, title="My RAG app").run()
   with its source and score.
 - `Ctrl+L` clears the results pane.
 
+## Progress reporting
+
+Multi-stage pipelines (route → rerank → answer) can take 10+ seconds. If your
+pipeline accepts a second positional parameter, it receives a `report`
+callback:
+
+```python
+def my_pipeline(query: str, report) -> RagResult:
+    report("routing query…")
+    route = pick_route(query)
+    report("reranking 20 candidates…")
+    docs = rerank(retrieve(query))
+    report("writing answer…")
+    return RagResult(answer=generate(query, docs), documents=docs)
+```
+
+While the query runs, the status line shows the latest report. When the
+result arrives, the reports persist as a per-stage timing trace above it:
+
+```
+routing query… 0.8s · reranking 20 candidates… 6.1s · writing answer… 3.2s
+```
+
+One-argument pipelines work unchanged and produce no trace. The trace is also
+kept when the pipeline raises mid-stage, so you can see how far it got.
+
 ## Demo
 
 ```sh

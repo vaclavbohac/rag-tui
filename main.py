@@ -5,9 +5,14 @@ import time
 from rag_tui import Document, RagResult, RagTUI
 
 
-def demo_pipeline(query: str) -> RagResult:
+def demo_pipeline(query: str, report) -> RagResult:
     """Stand-in for a real RAG pipeline: retrieve documents, generate an answer."""
-    time.sleep(0.5)  # simulate retrieval + generation latency
+    report("routing query…")
+    time.sleep(0.4)
+    report("reranking 20 candidates…")
+    time.sleep(0.6)
+    report("writing answer…")
+    time.sleep(0.5)
     return RagResult(
         answer=f"This is a placeholder answer for: *{query}*\n\n"
         "Replace `demo_pipeline` with your own retrieval + generation pipeline.",

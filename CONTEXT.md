@@ -24,12 +24,24 @@ _Avoid_: Prompt (that's the input widget), message
 The Pipeline's response to one Query: an optional generated answer plus the retrieved Documents.
 _Avoid_: Response, output
 
+**Report**:
+A short note the Pipeline emits through its optional second-argument callback while a Query runs ("reranking 20 candidates…").
+_Avoid_: Status, progress message, log line
+
+**Trace**:
+The persisted sequence of a Query's Reports with per-stage elapsed times, kept in the transcript above the RagResult.
+_Avoid_: History, timeline
+
 ## Relationships
 
 - A **Query** is answered by exactly one **RagResult**
 - A **RagResult** contains zero or more **Documents** and at most one answer
 - One **Query** runs at a time — the prompt locks while the **Pipeline** runs
   (deliberate: no abort, no overlapping queries, until practice shows it hurts)
+- A **Pipeline** may emit zero or more **Reports** per **Query**; each Report
+  starts a stage whose elapsed time runs until the next Report (or completion)
+- A **Query** gains a **Trace** only if its Pipeline emitted Reports —
+  one-argument Pipelines produce no Trace and keep working unchanged
 
 ## Example dialogue
 
