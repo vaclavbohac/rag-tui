@@ -15,7 +15,7 @@ bottom, scrolling results pane above it.
 - Add a dependency: `uv add <package>` (`uv add --dev` for dev tools)
 - Run tests: `uv run pytest` (single test: `uv run pytest tests/test_app.py::test_name`)
 - Tests are async by default (`asyncio_mode = "auto"`); TUI tests drive the app headlessly with Textual's `app.run_test()` pilot — no terminal needed.
-- CI lives at the **git repo root** (this project is a subdirectory of the repo): `../.github/workflows/rag-tui-ci.yml` runs pytest on Python 3.11–3.13.
+- CI: `.github/workflows/ci.yml` runs pytest on Python 3.11–3.13.
 
 ## Domain language & decisions
 
