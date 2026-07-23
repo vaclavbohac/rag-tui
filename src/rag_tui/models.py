@@ -8,11 +8,17 @@ from typing import Any
 
 @dataclass
 class Document:
-    """A retrieved document (or chunk) returned by a RAG pipeline."""
+    """A retrieved document (or chunk) returned by a RAG pipeline.
+
+    ``badges`` are short labels shown in the document's panel title.
+    ``metadata`` is opaque to the TUI — never rendered or interpreted
+    (ADR 0003); it is free-form storage for the pipeline's own bookkeeping.
+    """
 
     content: str
     source: str | None = None
     score: float | None = None
+    badges: list[str] = field(default_factory=list)
     metadata: dict[str, Any] = field(default_factory=dict)
 
 

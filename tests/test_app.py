@@ -191,3 +191,32 @@ async def test_one_arg_pipeline_produces_no_trace():
     async with app.run_test() as pilot:
         await submit_query(app, pilot, "q")
         assert len(app.query(".trace")) == 0
+
+
+async def test_badges_render_in_document_panel_title():
+    def pipeline(query: str) -> list[Document]:
+        return [
+            Document(content="msg", source="#general", score=0.91, badges=["negative"]),
+            Document(content="msg", source="#random", badges=["positive", "faq"]),
+        ]
+
+    app = RagTUI(pipeline)
+    async with app.run_test() as pilot:
+        await submit_query(app, pilot, "q")
+        titles = [c.title for c in app.query(Collapsible)]
+        assert titles == [
+            "#general  ·  score 0.910  ·  negative",
+            "#random  ·  positive  ·  faq",
+        ]
+
+
+async def test_metadata_is_never_rendered():
+    def pipeline(query: str) -> list[Document]:
+        return [Document(content="msg", source="doc.md", metadata={"badge": "SECRET"})]
+
+    app = RagTUI(pipeline)
+    async with app.run_test() as pilot:
+        await submit_query(app, pilot, "q")
+        (collapsible,) = app.query(Collapsible)
+        assert "SECRET" not in collapsible.title
+        assert all("SECRET" not in source for source in markdown_sources(app))

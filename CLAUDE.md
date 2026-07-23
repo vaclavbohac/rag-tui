@@ -25,7 +25,7 @@ bottom, scrolling results pane above it.
 
 The library's contract is a single **pipeline** callable (`query: str -> RagResult | str | list[Document]`) that the embedding application supplies; everything else is rendering.
 
-- `src/rag_tui/models.py` — `Document` and `RagResult` dataclasses. `RagResult.coerce()` normalizes the three allowed pipeline return types; extend it if pipelines may return new shapes.
+- `src/rag_tui/models.py` — `Document` and `RagResult` dataclasses. `RagResult.coerce()` normalizes the three allowed pipeline return types; extend it if pipelines may return new shapes. Display-worthy `Document` attributes are first-class fields (`source`, `score`, `badges`); `metadata` is opaque to the TUI and must never be rendered or interpreted (ADR 0003).
 - `src/rag_tui/app.py` — `RagTUI(App)`. Query submission kicks off an exclusive Textual worker: sync pipelines run via `asyncio.to_thread`, async pipelines are awaited, so the UI never blocks. Results (query echo, Markdown answer, one `Collapsible` per document) are appended to the `#results` `VerticalScroll`; pipeline exceptions render inline as an error line rather than crashing the app.
 - Progress reporting (ADR 0002): a pipeline that can bind a second positional arg (`_accepts_report`) receives a `report` callback. Reports update the status line live (marshalled via `call_from_thread` for sync pipelines, which run on a worker thread) and persist as a dim `.trace` line with per-stage elapsed times — kept even when the pipeline raises mid-stage.
 - `main.py` — runnable demo with a fake pipeline; not part of the packaged library.
