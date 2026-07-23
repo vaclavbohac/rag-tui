@@ -31,6 +31,9 @@ RagTUI(my_pipeline, title="My RAG app").run()
   `list[Document]` (retrieval-only, no answer).
 - Answers render as Markdown; each document appears as a collapsible panel
   with its source and score.
+- `Document.badges` — short labels like `["negative", "faq"]` — render in the
+  panel title: `#general · score 0.910 · negative`. `Document.metadata` is
+  never rendered; it's opaque storage for your own bookkeeping.
 - `Ctrl+L` clears the results pane.
 
 ## Progress reporting

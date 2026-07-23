@@ -180,10 +180,13 @@ class RagTUI(App):
         if result.answer:
             widgets.append(Markdown(result.answer))
         for index, doc in enumerate(result.documents, start=1):
-            title = doc.source or f"Document {index}"
+            parts = [doc.source or f"Document {index}"]
             if doc.score is not None:
-                title = f"{title}  ·  score {doc.score:.3f}"
-            widgets.append(Collapsible(Markdown(doc.content), title=title))
+                parts.append(f"score {doc.score:.3f}")
+            parts.extend(doc.badges)
+            widgets.append(
+                Collapsible(Markdown(doc.content), title="  ·  ".join(parts))
+            )
         if not widgets:
             widgets.append(Markdown("*No results.*"))
         return widgets

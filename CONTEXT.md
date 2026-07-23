@@ -12,6 +12,10 @@ front-end.
 A retrieved unit of context returned by the pipeline — may be a whole file or a chunk of one.
 _Avoid_: Chunk, passage, hit
 
+**Badge**:
+A short label the Pipeline attaches to a Document for display in its panel title ("negative", "faq").
+_Avoid_: Tag, label, annotation
+
 **Pipeline**:
 The developer's own RAG system — retrieval plus optional generation — supplied to the TUI as a callable (`query -> RagResult`).
 _Avoid_: Handler, backend, engine
@@ -42,6 +46,8 @@ _Avoid_: History, timeline
   starts a stage whose elapsed time runs until the next Report (or completion)
 - A **Query** gains a **Trace** only if its Pipeline emitted Reports —
   one-argument Pipelines produce no Trace and keep working unchanged
+- A **Document** carries zero or more **Badges**; its `metadata` is opaque to
+  the TUI — never rendered, never interpreted (ADR 0003)
 
 ## Example dialogue
 
@@ -66,3 +72,6 @@ _Avoid_: History, timeline
 - The project directory was named "rag-cli-skeleton" while the distribution
   was "rag-tui" — resolved: renamed the directory to `rag-tui`; one name
   everywhere (directory, distribution, package, CI).
+- Rendering `metadata["badge"]` was proposed to give metadata a visible role —
+  resolved: display-worthy attributes get first-class fields (**Badge**);
+  metadata stays an opaque bag the TUI never reads.
